@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Preferences" android:id="@+id/pref_item"></item>
+    <item android:id="@+id/calib_item" android:title="Toggle Calibrate Mode" android:titleCondensed="Toggle Calibrate"></item><item android:title="Exit/Hide" android:id="@+id/exit_item"></item>
+    
+    
+</menu>

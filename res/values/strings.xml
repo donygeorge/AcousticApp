@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, AcousticAppActivity123!</string>
+    <string name="app_name">AcousticApp</string>
+    <string name="play_str">Play Sound</string>
+    <string name="start_b">Start Recording</string>
+    <string name="stop_b">Stop Recording</string>
+    <string name="alarmInterval_tv_text">Alarm Interval</string>
+    <string name="recordmin_tv_text">Minimum Record Time</string>
+    <string name="recordmax_tv_text">Maximum Record Time</string>
+    <string name="energy_cb_text">Energy</string>
+    <string name="zcr_cb_text">Zero Crossing Rate</string>
+    <string name="frame_tv_text">Frame Length</string>
+    <string name="status_tv">Service Status</string>
+    <string name="recordstatus_tv">Record Status</string>
+    <string name="raw_cb_text">Raw Audio</string>
+</resources>

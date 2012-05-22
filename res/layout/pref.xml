@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+    <ScrollView android:layout_height="wrap_content" android:id="@+id/scrollView1" android:layout_width="fill_parent">
+        <LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        	<TableLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:id="@+id/tableLayout1">
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow0">
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow1">
+			<TextView android:text="@string/alarmInterval_tv_text"
+				android:id="@+id/alarmInterval_tv" android:layout_height="wrap_content"
+				android:layout_width="wrap_content"></TextView>
+			<Spinner android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/frameInterval_spinner"></Spinner>
+		</TableRow>
+		<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow2"
+			android:layout_width="wrap_content">
+			<TextView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/recordmin_tv" android:text="@string/recordmin_tv_text"></TextView>
+			<Spinner android:layout_height="wrap_content" android:id="@+id/frameSizeMin_spinner"
+				android:layout_width="wrap_content"></Spinner>
+		</TableRow>
+		<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow3"
+			android:layout_width="wrap_content">
+			<TextView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/recordmax_tv"
+				android:text="@string/recordmax_tv_text"></TextView>
+			<Spinner android:layout_height="wrap_content" android:id="@+id/frameSizeMax_spinner"
+				android:layout_width="wrap_content"></Spinner>
+		</TableRow>
+		<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow6"
+			android:layout_width="wrap_content">
+			<TextView android:id="@+id/frame_tv" android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:text="@string/frame_tv_text"></TextView>
+			<Spinner android:layout_height="wrap_content" android:id="@+id/frame_spinner"
+				android:layout_width="wrap_content"></Spinner>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow_feature">
+			<TextView android:text="Features : "
+				android:id="@+id/feature_tv" android:layout_height="wrap_content"
+				android:layout_width="wrap_content"></TextView>
+		</TableRow>
+
+
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow5a">
+			<CheckBox android:id="@+id/energy_cb" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="true"
+				android:text="@string/energy_cb_text"></CheckBox>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow5b">
+			<CheckBox android:id="@+id/zcr_cb" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="true"
+				android:text="@string/zcr_cb_text"></CheckBox>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow5c">
+			<CheckBox android:id="@+id/raw_cb" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="false"
+				android:text="@string/raw_cb_text"></CheckBox>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow5d">
+			<CheckBox android:id="@+id/spl_cb" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="false"
+				android:text="Sound Pressure Level"></CheckBox>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow5e">
+			<CheckBox android:id="@+id/adv_cb" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="false"
+				android:text="Advanced Fetures"></CheckBox>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow7">
+			<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/start_b" android:id="@+id/start_b"></Button>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow8">
+			<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/stop_b" android:id="@+id/stop_b"></Button>
+		</TableRow>
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/tableRow9">
+			<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Reset" android:id="@+id/reset_b"></Button>
+		</TableRow>
+	</TableLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

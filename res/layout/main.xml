@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<ScrollView android:layout_height="wrap_content" android:id="@+id/scrollView1"
+		android:layout_width="fill_parent">
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
+			<TableLayout android:layout_height="wrap_content"
+				android:layout_width="fill_parent" android:padding="2dp"
+				android:stretchColumns="*" android:background="#d0d0d0" android:id="@+id/tableLayout1">
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:background="#505050"
+					android:layout_marginBottom="2dp" android:padding="4dp"
+					android:id="@+id/tableRow_start_title">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+						android:id="@+id/status_title_title_tv" android:text="Status:"
+						android:textStyle="bold"></TextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_start">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/status_title_tv" android:text="@string/status_tv"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="Not Running" android:id="@+id/status_tv"
+						android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_stop">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/recordstatus_title_tv" android:text="@string/recordstatus_tv"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:text="Not recording"
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/recordstatus_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_spl">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/spl_title_tv" android:text="SPL"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:text="N/A "
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/spl_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				
+				
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:background="#505050"
+					android:layout_marginBottom="2dp" android:padding="4dp"
+					android:id="@+id/tableRow_health_title">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+						android:id="@+id/health_title_title_tv" android:text="Processing Health"
+						android:textStyle="bold"></TextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_health1">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/health_title_tv" android:text="Current Health"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A  " android:id="@+id/curhealth_tv"
+						android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_health2">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/health_title_tv" android:text="Process Health"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A  " android:id="@+id/prochealth_tv"
+						android:gravity="right"></CheckedTextView>
+				</TableRow>
+				
+				
+				
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="4dp"
+					android:layout_marginTop="2dp" android:layout_marginBottom="2dp"
+					android:background="#505050" android:id="@+id/tableRow_result_title">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+						android:id="@+id/values_title_title_tv" android:text="Results:"
+						android:textStyle="bold"></TextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_minute">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/minute_title_tv" android:text="Last Minute"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="Non-voice" android:id="@+id/minute_tv"
+						android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_hour">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/hour_title_tv" android:text="Last Hour"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A" android:id="@+id/hour_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_day">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/day_title_tv" android:text="Last Day"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A" android:id="@+id/day_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_week">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/week_title_tv" android:text="Last Week"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A " android:id="@+id/week_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="4dp"
+					android:layout_marginTop="2dp" android:layout_marginBottom="2dp"
+					android:background="#505050" android:id="@+id/tableRow_calib_title"
+					android:visibility="gone">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+						android:id="@+id/calib_title_title_tv" android:text="Calibration:"
+						android:textStyle="bold"></TextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_voice"
+					android:visibility="gone">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/calib_title_tv" android:text="State"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A " android:id="@+id/voice_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_calibvalue"
+					android:visibility="gone">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/calibvalue_title_tv" android:text="Value"
+						android:textStyle="bold"></TextView>
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/tp_tv"
+						android:text=" : " android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textStyle="bold"></TextView>
+					<CheckedTextView android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+						android:text="N/A " android:id="@+id/calib_tv" android:gravity="right"></CheckedTextView>
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_seekbar"
+					android:visibility="gone">
+					<SeekBar android:layout_height="wrap_content" android:id="@+id/seekBar1"
+						android:layout_span="3" android:layout_width="fill_parent"
+						android:tag="Calibration" android:max="500"></SeekBar>
+
+				</TableRow>
+				<TableRow android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:padding="1dp"
+					android:background="#000000" android:id="@+id/tableRow_calibbutton"
+					android:visibility="gone">
+					<Button android:text="Set" android:id="@+id/calib_b"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+				</TableRow>
+
+			</TableLayout>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

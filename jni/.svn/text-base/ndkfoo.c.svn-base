@@ -1,0 +1,511 @@
+#include <string.h>
+#include <jni.h>
+#include <android/log.h>
+#include <stdio.h>
+#include <math.h>
+#include "kiss_fftr.h"
+
+#define FRAME_LENGTH 256
+#define FFT_LENGTH FRAME_LENGTH/2+1
+#define PI 3.14159265
+#define REL_SPEC_WINDOW 200
+#define NOISE_LEVEL 0 //420    // == (0.01^2 * 32768^2) / 256
+//#define NOISE_LEVEL 1668    // == (0.01^2 * 32768^2) / 256
+
+#define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "JNI_DEBUGGING", __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,   "JNI_DEBUGGING", __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,    "JNI_DEBUGGING", __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,    "JNI_DEBUGGING", __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,   "JNI_DEBUGGING", __VA_ARGS__)
+
+
+
+jint sum = 0;
+jshort buf[256];
+jint i,j;
+double sum_full_data;
+double sum_full_data_squared;
+jdouble mean_full_data;
+float normalizedData[FRAME_LENGTH];
+char buffer [1500];
+char temp_buffer [50];
+int n;
+double factorsHanning[FRAME_LENGTH];
+double factorsHamming[FRAME_LENGTH];
+float dataHanning[FRAME_LENGTH];
+float dataHamming[FRAME_LENGTH];
+double spec[FFT_LENGTH];
+double norm_spec[FFT_LENGTH];
+double prev_spec[FFT_LENGTH];
+double unnormed_mean_spec[FFT_LENGTH];
+double unnormed_sum_spec[FFT_LENGTH];
+double normed_mean_spec[FFT_LENGTH];
+kiss_fft_cpx freq[FFT_LENGTH];
+kiss_fft_cpx y[FRAME_LENGTH];
+kiss_fft_cpx z[FRAME_LENGTH];
+kiss_fft_cpx fft[FFT_LENGTH];
+kiss_fft_cpx powerSpecCpx[FFT_LENGTH];
+kiss_fft_scalar powerSpec[FFT_LENGTH];
+kiss_fft_scalar magnitudeSpec[FFT_LENGTH];
+double spectral_entropy;
+double rel_spectral_entropy;
+int no_of_samples=0;
+int divider;
+double peak_vals[FRAME_LENGTH/2];
+int peak_loc[FRAME_LENGTH/2];
+//number of autocorrelations
+int nacorr = (int)(FRAME_LENGTH/2);
+float acorr[FRAME_LENGTH/2];
+float normalizedAcorr[FRAME_LENGTH/2];
+double comp[FRAME_LENGTH/2];
+float divider_spec = 0.0;
+
+//configurations
+kiss_fftr_cfg cfgFwd;
+kiss_fftr_cfg cfgInv;
+
+//features
+double energy;
+double relSpecEntr;
+int numAcorrPeaks, maxAcorrPeakLag;
+float maxAcorrPeakVal;
+
+void normalize_data();
+void computeHamming();
+void computePowerSpec(kiss_fft_cpx*,kiss_fft_scalar*,int);
+void computeMagnitudeSpec(kiss_fft_scalar*,kiss_fft_scalar*,int);
+void computeHammingFactors();
+double computeEnergy(const kiss_fft_scalar *powerSpec,int len);
+void computeSpectralEntropy2(kiss_fft_scalar* magnitudeSpec_l,int len);
+void whitenPowerSpectrumToCpx(const kiss_fft_scalar *powerSpec, kiss_fft_cpx *out, int energy, int len);
+void computeAutoCorrelationPeaks2(const kiss_fft_scalar* powerSpec_l, kiss_fft_cpx* powerSpecCpx_l, int NOISE_01_l, int len);
+void findPeaks(const float *in, int length, int *numPeaks, float *maxPeakVal, int *maxPeakLag);
+void normalizeAcorr(const float *in, float *out, int outLen);
+
+void Java_edu_cornell_audioProbe_AudioManager_audioFeatureExtractionInit(JNIEnv* env, jobject javaThis) {
+
+
+	for (i = 0; i < FRAME_LENGTH; i++) {
+		//sum += buf[i]*buf[i];
+		unnormed_sum_spec[i] = 0;
+	}
+
+	cfgFwd = kiss_fftr_alloc(FRAME_LENGTH,0, NULL, NULL);
+	cfgInv = kiss_fftr_alloc(FRAME_LENGTH,1, NULL, NULL);
+
+
+	//computing hanning factors
+	//computeHanningFactors();
+
+	//computing hamming factors
+	computeHammingFactors();
+
+}
+
+void Java_edu_cornell_audioProbe_AudioManager_audioFeatureExtractionDestroy(JNIEnv* env, jobject javaThis) {
+
+	//free(cfgFwd);
+
+
+}
+
+jstring Java_edu_cornell_audioProbe_AudioManager_features(JNIEnv* env, jobject javaThis, jshortArray array) {
+
+	jstring jstr;
+
+	(*env)->GetShortArrayRegion(env, array, 0, FRAME_LENGTH, buf);
+
+	//normalize data
+	normalize_data();
+
+	//apply window
+	//computeHanning();
+	computeHamming();
+
+
+	//computeFwdFFT
+	kiss_fftr(cfgFwd, normalizedData, fft);
+
+	//compute power spectrum
+	computePowerSpec(fft, powerSpec, FFT_LENGTH);
+
+	//compute magnitude spectrum
+	computeMagnitudeSpec(powerSpec, magnitudeSpec, FFT_LENGTH);
+
+
+	// compute total energy
+	energy = computeEnergy(powerSpec,FFT_LENGTH) / FFT_LENGTH;
+	//debug code
+	//n=sprintf(buffer, "ener %f", energy);
+	//LOGE(buffer);
+
+
+	//compute Spectral Entropy
+	computeSpectralEntropy2(magnitudeSpec, FFT_LENGTH);
+
+	computeAutoCorrelationPeaks2(powerSpec, powerSpecCpx, NOISE_LEVEL, FFT_LENGTH);
+
+	//
+	//computeAutoCorrelationPeaks();
+
+	n=sprintf(buffer, "%d,%f,%d,%f,%f,%f\n", numAcorrPeaks,maxAcorrPeakVal,maxAcorrPeakLag,spectral_entropy,rel_spectral_entropy,energy);
+	//LOGE(buffer);
+	jstr = (*env)->NewStringUTF(env, buffer);
+
+
+}
+
+void computeAutoCorrelationPeaks2(const kiss_fft_scalar* powerSpec_l, kiss_fft_cpx* powerSpecCpx_l, int NOISE_01_l, int len)
+{
+	whitenPowerSpectrumToCpx(powerSpec_l, powerSpecCpx_l, NOISE_01_l, len);
+
+	kiss_fftri(cfgInv, powerSpecCpx, acorr);
+
+	normalizeAcorr(acorr, normalizedAcorr, FRAME_LENGTH/2);
+
+
+
+	findPeaks(normalizedAcorr, FRAME_LENGTH/2,
+			&numAcorrPeaks,
+			&maxAcorrPeakVal,
+			&maxAcorrPeakLag);
+
+	//debug code
+	//n=sprintf(buffer, "NAP: %d, MAPV: %f, MAPL %d", numAcorrPeaks,maxAcorrPeakVal,maxAcorrPeakLag);
+	//LOGE(buffer);
+}
+
+
+
+
+void computeSpectralEntropy2(kiss_fft_scalar* magnitudeSpec_l,int len)
+{
+
+	double sum_spec = 0;
+
+	//sum data for normalizing later
+	for(i = 0; i< len; i++){
+		sum_spec = sum_spec + magnitudeSpec_l[i];
+	}
+
+	//normalized spec
+	spectral_entropy = 0;
+	rel_spectral_entropy = 0;
+	divider_spec = 0.0;
+
+	if(no_of_samples <= REL_SPEC_WINDOW){
+		no_of_samples++; // the value will fix at "REL_SPEC_WINDOW+1"
+		divider_spec = no_of_samples;
+	}
+	else{ // the value will fix at "REL_SPEC_WINDOW+1"
+		divider_spec = REL_SPEC_WINDOW;
+	}
+
+	//spectral entropy and saving moving average code
+	for(i = 0; i< FFT_LENGTH; i++){
+
+
+		//norm_spec[i] = magnitudeSpec_l[i]/(sum_spec);
+		norm_spec[i] = magnitudeSpec_l[i]/(sum_spec + 0.00001);
+		//if(norm_spec[i] < 0.0000001)
+			//norm_spec[i] = 0.0000001;
+
+		if(no_of_samples > REL_SPEC_WINDOW){
+			//will come here for the 501th sample but "no_of_samples=500"
+			unnormed_sum_spec[i] = unnormed_sum_spec[i] - prev_spec[i];
+		}
+
+		unnormed_sum_spec[i] = unnormed_sum_spec[i] + magnitudeSpec_l[i];
+
+		//spectral entropy
+		if(norm_spec[i] != 0)
+		{
+			spectral_entropy = spectral_entropy - norm_spec[i]*log( norm_spec[i]);
+		}
+
+		//no initialization because initially it will not be used
+		//before (no_of_samples > REL_SPEC_WINDOW) is true
+		prev_spec[i] = magnitudeSpec_l[i];//keep the previous
+
+	}
+
+	//normalize mean spectral entropy
+	sum_spec = 0;
+	for(i=0;i<FFT_LENGTH;i++){
+		unnormed_mean_spec[i] = unnormed_sum_spec[i]/divider_spec;
+		sum_spec+=unnormed_mean_spec[i];
+	}
+
+	//realative spectral entropy
+	for(i=0;i<FFT_LENGTH;i++){
+		normed_mean_spec[i] = unnormed_mean_spec[i]/sum_spec;
+		if(normed_mean_spec[i] <= 0)
+			normed_mean_spec[i] = 0.000001;
+		rel_spectral_entropy = rel_spectral_entropy + norm_spec[i]*(log( norm_spec[i]) - log(normed_mean_spec[i]));
+	}
+
+	//debug code
+	/*
+	sum_spec = 0.0;
+	for(i=0;i<FFT_LENGTH;i++)
+		sum_spec+=normed_mean_spec[i];
+
+	n=sprintf(buffer, "spectral_entropy %f %f %f %f", rel_spectral_entropy, spectral_entropy,divider_spec,sum_spec);
+	LOGE(buffer);
+	 */
+
+}
+
+double computeEnergy(const kiss_fft_scalar *powerSpec2,int len)
+{
+	double r=0;
+
+	for(i=0; i<len; i++){
+		r += powerSpec2[i];
+	}
+	return r;
+}
+
+void computeMagnitudeSpec(kiss_fft_scalar* src,kiss_fft_scalar* dest,int len)
+{
+	for(j=0; j<len; j++){
+		dest[j] = sqrt(src[j]);
+	}
+}
+
+
+void
+normalizeAcorr(const float *in, float *out, int outLen)
+{
+	int i;
+
+	//float m = 0.0F;
+	for(i=0; i<outLen; i++){
+		out[i] = (float) ((float)in[i] / in[0]);
+		//if(out[i] > m) m = out[i];
+	}
+
+
+	/*
+    if(m > 1){
+    fprintf(stderr, "#INFO normalized acorr: ");
+    for(i=0; i<outLen; i++){
+      fprintf(stderr, "%g,", out[i]);
+    }
+    fprintf(stderr, "\n");
+  }
+	 */
+}
+
+
+void computePowerSpec(kiss_fft_cpx* fft_l,kiss_fft_scalar* dest,int len)
+{
+	for(j=0; j<len; j++){
+		dest[j] = fft[j].r * fft[j].r + fft[j].i * fft[j].i;
+	}
+}
+
+
+void
+whitenPowerSpectrumToCpx(const kiss_fft_scalar *powerSpec, kiss_fft_cpx *out, int energy, int len)
+{
+
+	for(j=0; j<len; j++){
+		out[j].r = powerSpec[j] + energy;
+		out[j].i = 0;
+		//fprintf(stderr, "#INFO whitened: %d -> (%d,%d)\n", powerSpec[j], out[j].r, out[j].i);
+	}
+}
+
+jint Java_edu_cornell_audioProbe_AudioManager_energy(JNIEnv* env, jobject javaThis, jshortArray array) {
+
+	(*env)->GetShortArrayRegion(env, array, 0, FRAME_LENGTH, buf);
+
+	//sum++;
+	sum = 0;
+
+	for (i = 0; i < FRAME_LENGTH; i++) {
+		sum += buf[i]*buf[i];
+	}
+	return sum;
+
+
+}
+
+
+
+void normalize_data() //zero mean data
+{
+	//normalize data
+	////////// NORMALIZE DATA //////////////
+
+	sum_full_data = 0;
+	sum_full_data_squared = 0;
+
+	for(i = 0; i<FRAME_LENGTH; i++){
+		sum_full_data = sum_full_data + buf[i];///(2^15);
+		//sum_full_data_squared = sum_full_data_squared + buf[i]*buf[i];//used in energy
+	}
+
+	mean_full_data = sum_full_data/FRAME_LENGTH;
+
+	for (i = 0; i < FRAME_LENGTH; i++) {
+		normalizedData[i] = buf[i] - mean_full_data;//zero mean the data
+	}
+
+
+	/*
+	//debug code
+	n=sprintf(buffer, "no zero mean: %f %f", mean_full_data,sum_full_data);
+	LOGE(buffer);
+
+	sum_full_data = 0;
+	for(i = 0; i<FRAME_LENGTH; i++){
+		sum_full_data = sum_full_data + normalizedData[i];
+	}
+
+	mean_full_data = sum_full_data/FRAME_LENGTH;
+	n=sprintf(buffer, "zero mean: %f %f", mean_full_data,sum_full_data);
+	LOGE(buffer);
+	 */
+
+}
+
+
+void computeHanningFactors() {
+
+	j = 0;
+	for (i = 1; i <= FRAME_LENGTH; i++) { //calculate the hanning window
+		factorsHanning[j] = 0.5 * (1 - cos(2.0 * PI * i / (FRAME_LENGTH + 1)));
+		j++;
+	}
+}
+
+void computeHammingFactors() {
+
+	//j = 0;
+	double denom = (double)FRAME_LENGTH-1;
+	for (i = 0; i < FRAME_LENGTH; i++) { //calculate the hanning window
+		//factorsHamming[j] = 0.5 * (1 - cos(2.0 * PI * i / (FRAME_LENGTH + 1)));
+		factorsHamming[i] = 0.54 -(0.46 * cos( 2.0 * PI * ((double)i / denom) ) );
+
+		//debug code
+		//n=sprintf(buffer, "factorsHamming: %d %.9f", i,factorsHamming[i]);
+		//LOGE(buffer);
+	}
+
+
+}
+
+void computeHanning() //apply hanning window
+{
+
+	for (j = 0; j < FRAME_LENGTH; j+=1) { //calculate the hanning window
+		dataHanning[j] = factorsHanning[j]*normalizedData[j];
+	}
+}
+
+void computeHamming() //apply hamming window
+{
+
+	//debug code
+	//buffer[0] = 0;
+
+	for (j = 0; j < FRAME_LENGTH; j+=1) { //calculate the hanning window
+		dataHamming[j] = factorsHamming[j]*normalizedData[j];
+
+		//debug code
+		//n=sprintf(temp_buffer, "%f : %f, ",normalizedData[j],dataHamming[j]);
+		//n=sprintf(temp_buffer, "%f , ",dataHamming[j]);
+		//strcat(buffer,temp_buffer);
+
+
+	}
+
+	//debug code
+	//LOGE(buffer);
+
+}
+
+
+void findPeaks(const float *in, int length, int *numPeaks, float *maxPeakVal, int *maxPeakLag)
+{
+
+	int i;
+	float maxPeak = 0;
+	int maxPeakIdx = 0;
+
+	float nonInitialMax = 0;
+	int maxIdx = 0;
+	float gMin = 0;
+
+	float lastVal;
+
+	int pastFirstZeroCrossing = 0;
+
+	int tn = 0;
+
+	// start with (and thus skip) 0 lag
+	lastVal = in[0];
+
+	for(i=1; i<length; i++){
+
+		// check for global max and min
+		if(in[i] > nonInitialMax){
+			nonInitialMax = in[i];
+			maxIdx = i;
+		}
+
+		if(in[i] < gMin){
+			gMin = in[i];
+		}
+
+
+		if(pastFirstZeroCrossing){
+			// are we in a peak?
+			if(lastVal >= 0 && in[i] >=0){
+				// then check for new max
+				if(in[i] > maxPeak){
+					maxPeak = in[i];
+					maxPeakIdx = i;
+				}
+
+				// did we just leave a peak?
+			}else if(lastVal >=0 && in[i] < 0 && maxPeak > 0){
+
+				// count the last peak
+				tn++;
+
+
+				// are we just entering a peak?
+			}else if(lastVal < 0 && in[i] >= 0){
+				// then check for new max
+				if(in[i] > maxPeak){
+					maxPeak = in[i];
+					maxPeakIdx = i;
+				}
+			}
+		}else{
+			if(in[i] <= 0){
+				pastFirstZeroCrossing = 1;
+			}
+		}
+
+		lastVal = in[i];
+
+	}
+
+
+	//fprintf(stderr, "#INFO func -- max acorr peak val: %g, num peaks: %d\n", maxPeak, tn);
+
+	// set the return values
+	*numPeaks = tn;
+
+	*maxPeakVal = maxPeak;
+	*maxPeakLag = maxPeakIdx;
+
+	//*globalMax = nonInitialMax;
+	//*globalMaxLag = maxIdx;
+	//*globalMin = gMin;
+
+}
