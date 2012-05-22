@@ -681,9 +681,14 @@ public class AcousticAppService extends Service
 
 	public void startRecording()
 	{
-		Log.i("AcousticAppCheck", "Started Rec");
-		Log.i("AcousticAppControl", "Starting Recording");					
 
+		Log.i("AcousticAppControl", "Started for "+frameSize+" , version no is"+versionNo);					
+
+		notificationManager.cancel(1);	
+		notification = new Notification(R.drawable.notif_icon_green ,"Service Running",System.currentTimeMillis());
+		notification.flags |= Notification.FLAG_NO_CLEAR; 
+		notification.setLatestEventInfo(context_notif, "AcousticApp", "Acoustic Service Running",contentIntent );
+		notificationManager.notify(1, notification);
 
 		recorderInstance = new Recorder(this, SAMPLERATE, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, frameLength_int, deviceName, versionNo, feature); 
 		record_thread =new Thread(recorderInstance); 
@@ -768,6 +773,12 @@ public class AcousticAppService extends Service
 		mEditor.commit();
 		Log.i(TAG,"Stopped Recording");
 		Log.i("AcousticAppControl", "Stopped Recording");
+		notificationManager.cancel(1);
+		notification = new Notification(R.drawable.notif_icon_yellow ,"Service Idle",System.currentTimeMillis());
+		notification.flags |= Notification.FLAG_NO_CLEAR; 
+		notification.setLatestEventInfo(context_notif, "AcousticApp", "Acoustic Service Idle",contentIntent );
+		notificationManager.notify(1, notification);
+		
 		try 
 		{ 
 			if(record_thread!=null)
@@ -1234,7 +1245,7 @@ public class AcousticAppService extends Service
 		{
 			if ( (!Double.isNaN(mLimit) && (mCurTotal > mLimit)) || mLimit ==0 )
 			{
-				Log.i(TAG, "Ran out of AcousticApp budget.");
+				Log.i("AcousticAppControl", "Ran out of AcousticApp budget.");
 
 				notification = new Notification(R.drawable.notif_icon ,"Ran out of Budget",System.currentTimeMillis());
 				notification.flags |= Notification.FLAG_NO_CLEAR; 
@@ -1246,7 +1257,7 @@ public class AcousticAppService extends Service
 			else if( !Double.isNaN(mLimit) && (mCurTotal + frameSize> mLimit))
 			{
 				limited_frameSize = (int)(mLimit - mCurTotal);
-				Log.i(TAG, "Limiting Running time to AcousticApp: "+ limited_frameSize);
+				Log.i("AcousticAppControl", "Limiting Running time to AcousticApp: "+ limited_frameSize);
 				isLimited = true;
 			}
 
