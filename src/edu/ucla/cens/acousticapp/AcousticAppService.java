@@ -639,7 +639,10 @@ public class AcousticAppService extends Service
 		mEditor.putBoolean("status", false);
 		mEditor.putString("workdone", acousticManager.getSeconds()+"");
 		mEditor.commit();
-
+		
+		acousticRunning = false;
+		acousticManager.stop();
+		
 		notificationManager.cancel(1);
 		//		mEditor.putInt("alarm_interval", frameInterval_int);
 		//		mEditor.commit();
@@ -657,10 +660,6 @@ public class AcousticAppService extends Service
 		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 
 
-		// Cancel location update registration
-		// mLocManager.removeUpdates(this);
-		acousticRunning = false;
-		acousticManager.stop();
 		unbindService(mPowerMonitorConnection);
 		unbindService(Log.SystemLogConnection);
 	}
