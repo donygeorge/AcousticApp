@@ -643,13 +643,13 @@ public class AcousticAppService extends Service
 		acousticRunning = false;
 		acousticManager.stop();
 		
-		notificationManager.cancel(1);
+		notificationManager.cancelAll(); //cancel(1);
 		//		mEditor.putInt("alarm_interval", frameInterval_int);
 		//		mEditor.commit();
 
 		// Cancel the pending alarms
 		mAlarmManager.cancel(mScanSender);
-
+		
 		if(power_receiver!=null)
 		{
 			unregisterReceiver(power_receiver);
@@ -759,10 +759,14 @@ public class AcousticAppService extends Service
 		Log.i(TAG,"Stopped Recording");
 		Log.i("AcousticAppControl", "Stopped Recording");
 		notificationManager.cancel(1);
-		notification = new Notification(R.drawable.notif_icon_yellow ,"Service Idle",System.currentTimeMillis());
-		notification.flags |= Notification.FLAG_NO_CLEAR; 
-		notification.setLatestEventInfo(context_notif, "AcousticApp", "Acoustic Service Idle",contentIntent );
-		notificationManager.notify(1, notification);
+		
+		if(mSettings.getBoolean("status", false))
+		{
+			notification = new Notification(R.drawable.notif_icon_yellow ,"Service Idle",System.currentTimeMillis());
+			notification.flags |= Notification.FLAG_NO_CLEAR; 
+			notification.setLatestEventInfo(context_notif, "AcousticApp", "Acoustic Service Idle",contentIntent );
+			notificationManager.notify(1, notification);
+		}
 		
 		try 
 		{ 
