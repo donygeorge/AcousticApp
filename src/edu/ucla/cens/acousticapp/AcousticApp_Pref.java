@@ -87,7 +87,7 @@ public class AcousticApp_Pref extends Activity
 		if(res>=0)
 			frameInterval_spinner.setSelection(res);
 		else
-			frameInterval_spinner.setSelection(6);
+			frameInterval_spinner.setSelection(5);
 
 		frameSizeMin_spinner = (Spinner) findViewById(R.id.frameSizeMin_spinner);
 		ArrayAdapter<CharSequence> frameSizeMin_adapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_spinner_dropdown_item, frameSizeMinArray_spinner);
@@ -97,7 +97,7 @@ public class AcousticApp_Pref extends Activity
 		if(res>=0)
 			frameSizeMin_spinner.setSelection(res);
 		else
-			frameSizeMin_spinner.setSelection(11);
+			frameSizeMin_spinner.setSelection(10);
 
 		frameSizeMax_spinner = (Spinner) findViewById(R.id.frameSizeMax_spinner);
 		ArrayAdapter<CharSequence> frameSizeMax_adapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_spinner_dropdown_item, frameSizeMaxArray_spinner);
@@ -107,7 +107,7 @@ public class AcousticApp_Pref extends Activity
 		if(res>=0)
 			frameSizeMax_spinner.setSelection(res);
 		else
-			frameSizeMax_spinner.setSelection(11);
+			frameSizeMax_spinner.setSelection(10);
 
 		frame_spinner = (Spinner) findViewById(R.id.frame_spinner);
 		ArrayAdapter<CharSequence> frame_adapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_spinner_dropdown_item, frameArray_spinner);

@@ -68,20 +68,19 @@ public class AcousticAppService extends Service
 	public static final int INT_MAX=CONSTS.INT_MAX;
 	public static final int INTERVAL = CONSTS.INTERVAL;
 
-
 	/** Time unit constants */
 	public static final int ONE_SECOND = 1000;
 	public static final int ONE_MINUTE = 60 * ONE_SECOND;
 	public static final int ONE_HOUR = 60 * ONE_MINUTE;
 	public static final int ONE_DAY = 24 * ONE_HOUR;
 
-	public static final int DAY_NO = 24;//////////
-	public static final int WEEK_NO = 7;//////////////
+	public static final int DAY_NO = 24;
+	public static final int WEEK_NO = 7;
 
 	public static final int SAMPLERATE =8000;
 
 	private static final int DEFAULT_ALARM_INTERVAL = INTERVAL * ONE_SECOND;
-	private static final int DEFAULT_RECORDER_INTERVAL = 2 * ONE_SECOND;
+	private static final int DEFAULT_RECORDER_INTERVAL = INT_MAX * ONE_SECOND;
 	private static final int DEFAULT_RECORDER_MAX = INT_MIN * ONE_SECOND;
 	private static final int DEFAULT_RECORDER_MIN = INT_MAX * ONE_SECOND;
 	private static final int DEFAULT_FRAME_COUNT = 60;
@@ -123,12 +122,6 @@ public class AcousticAppService extends Service
 	ArrayList<Double> totalWork;
 	ArrayList<String> unitNames;
 
-	//private static final int LOC_UPDATE_TIMEOUT = 5 * ONE_SECOND;//////////////
-	//private static final int GPS_LOCK_TIMEOUT = 10 * ONE_SECOND;/////////////
-
-	/** Threshold values */
-	// private static final double GPS_ACCURACY_THRESHOLD = 10.0;
-
 	/** State variable indicating if the services is running or not */
 	private boolean mRun;
 
@@ -149,18 +142,11 @@ public class AcousticAppService extends Service
 
 	/** Acoustic manager object */
 	private AcousticManager acousticManager;
-	/** The last known location object */
-	// private Location mLastKnownLoc;
-	/** Temporary location object that is not accurate enough */
-	// private Location mTempKnownLoc;
 
 	/** Scanning interval variable */
 	private int mAlarmScanInterval;
-	// private SimpleDateFormat mSDF;
-	//private CircularQueue mHistory;
 	private SharedPreferences mSettings;
 	private SharedPreferences.Editor mEditor;
-
 
 	Recorder recorderInstance;
 	Thread record_thread; 
@@ -391,15 +377,15 @@ public class AcousticAppService extends Service
 				switch (state) {
 				case TelephonyManager.CALL_STATE_RINGING:
 					Log.i(TAG, "Device is ringing");// Call from " + number);
-					if(recorderInstance!=null)
+					if(recorderInstance!=null && recorderInstance.isRecording())
 					{
 						Log.i("AcousticAppControl", "Device is ringing, stopping recorder");// Call from " + number);					
-						recorderInstance.setRecording(false);
+						//recorderInstance.setRecording(false);
 					}
 					break;
 				case TelephonyManager.CALL_STATE_OFFHOOK:
 					Log.i(TAG,"Device call state is currently Off Hook.");
-					if(recorderInstance!=null)
+					if(recorderInstance!=null && recorderInstance.isRecording())
 					{
 						Log.i("AcousticAppControl", "Device is off Hook, stopping recorder");// Call from " + number);					
 						recorderInstance.setRecording(false);         
@@ -573,7 +559,7 @@ public class AcousticAppService extends Service
 						long now = SystemClock.elapsedRealtime();
 						mAlarmManager.cancel(mScanSender);
 						mAlarmManager.setRepeating (AlarmManager.ELAPSED_REALTIME_WAKEUP, now, frameInterval_int, mScanSender);
-						Log.w(TAG, "Setting Alarm for "+frameInterval_int);
+						Log.i("AcousticAppControl", "Setting Alarm for "+frameInterval_int);
 
 						Log.i(TAG, "Loading bundle, Boot alarm");
 						log("Boot : frame Interval: "+frameInterval_int + ", FrameMin: "+frameSizeMin_int+ ", FrameMax: "+frameSizeMax_int+ ", Frame: "+frameSize);
@@ -626,7 +612,7 @@ public class AcousticAppService extends Service
 
 					long now = SystemClock.elapsedRealtime();
 					mAlarmManager.cancel(mScanSender);
-					Log.i(TAG, "Setting Alarm for "+frameInterval_int);
+					Log.i("AcousticAppControl", "Setting Alarm for "+frameInterval_int);
 
 					mAlarmManager.setRepeating (AlarmManager.ELAPSED_REALTIME_WAKEUP, now, frameInterval_int, mScanSender);
 					//Log.i(TAG, "Loading bundle, resetting alarm as per GUI");
@@ -765,7 +751,7 @@ public class AcousticAppService extends Service
 			}
 		}
 		tp2=SystemClock.elapsedRealtime();
-		//log("Time end: "+(tp2-tp1));
+		Log.i("AcousticAppControl","Time end: "+(tp2-tp1));
 		tp1=tp2;
 
 		recorderInstance.setRecording(false); 
@@ -1237,7 +1223,6 @@ public class AcousticAppService extends Service
 		}
 
 		public void run() {
-			// TODO Auto-generated method stub
 			start();
 		}
 
@@ -1279,53 +1264,6 @@ public class AcousticAppService extends Service
 
 			startRecording();
 			stop();
-
-			//            if (!acousticRunning)
-			//            {
-			//                if ( Double.isNaN(mLimit) || (mCurTotal < mLimit) )
-			//                {
-			//                    mStart = SystemClock.elapsedRealtime();
-			//                    Log.i(TAG, "Starting GPS.");
-			//                    mLocManager.requestLocationUpdates( 
-			//                            LocationManager.GPS_PROVIDER, 
-			//                            mGpsScanInterval, 0,
-			//                            LocationTrackerService.this);
-			//
-			//                    LocationTrackerService.this.mHandler.sendMessageAtTime( 
-			//                            mHandler.obtainMessage(LOC_UPDATE_MSG), 
-			//                            SystemClock.uptimeMillis() 
-			//                            + LocationTrackerService.this.GPS_LOCK_TIMEOUT); 
-			//
-			//
-			//                    acousticRunning = true;
-			//                    mCount += 1;
-			//                    return acousticRunning;
-			//                }
-			//                else 
-			//                {
-			//                    Log.i(TAG, "No budget to start GPS.");
-			//                    return acousticRunning;
-			//                }
-			//            }
-			//            else
-			//            {
-			//                if ( !Double.isNaN(mLimit) && (mCurTotal > mLimit) )
-			//                {
-			//
-			//                    Log.i(TAG, "Ran out of GPS budget.");
-			//                    //mLocManager.removeUpdates(LocationTrackerService.this);
-			//                    Log.i(TAG, "Stopping GPS.");
-			//                    acousticRunning = false;
-			//                    return acousticRunning;
-			//                }
-			//                else
-			//                {
-			//                    Log.i(TAG, "Continue scanning GPS.");
-			//                    return acousticRunning;
-			//                }
-			//            }
-
-
 		}
 
 		public void stop()

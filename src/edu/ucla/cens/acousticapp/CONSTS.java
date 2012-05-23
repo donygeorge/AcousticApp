@@ -37,9 +37,9 @@ public class CONSTS
 	public static final Boolean SPL_B=true;
 	public static final Boolean ADV_B=true;
 	
-	public static final int INT_MIN=3600;
-	public static final int INT_MAX=3600;
-	public static final int INTERVAL = 7200;
+	public static final int INT_MIN=1800;
+	public static final int INT_MAX=1800;
+	public static final int INTERVAL = 3600;
 	
 	//used for partial Json creation
 	public static Boolean PARTIAL = true;
