@@ -363,7 +363,7 @@ public class AcousticAppActivity extends Activity
 		{
 			synchronized (this) 
 			{ 
-				Log.i(TAG,"Update UI Started");
+				Log.i("AcousticAppControl","Update UI Started");
 				while(update_bool)
 				{
 					try 
@@ -377,7 +377,7 @@ public class AcousticAppActivity extends Activity
 						e.printStackTrace();
 					}
 				}
-				Log.i(TAG,"Update  UI Stopped");
+				Log.i("AcousticAppControl","Update  UI Stopped");
 			}
 		}
 
