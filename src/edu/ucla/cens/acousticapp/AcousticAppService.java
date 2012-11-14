@@ -94,8 +94,6 @@ public class AcousticAppService extends Service
 	int hour_count=0;
 	int day_count=0;
 	int week_count=0;
-	
-    private OhmageProbeWriter probeWriter;
 
 	/** Name of the service used logging tag */
 	private static final String TAG = "AcousticAppService";
@@ -437,10 +435,6 @@ public class AcousticAppService extends Service
 			Log.i(TAG, "Connecting to Log");
 			bindService(new Intent(ISystemLog.class.getName()),Log.SystemLogConnection, Context.BIND_AUTO_CREATE);
 		}
-		
-        probeWriter = new OhmageProbeWriter(this);
-        probeWriter.connect();
-
 
 		if(CONSTS.UPLOAD && feature_raw)
 		{
@@ -656,15 +650,15 @@ public class AcousticAppService extends Service
 		// Cancel the pending alarms
 		mAlarmManager.cancel(mScanSender);
 		
-        probeWriter.close();
-
 		if(power_receiver!=null)
 		{
 			unregisterReceiver(power_receiver);
 		}
 
+
 		//cancel phone state Listener
 		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+
 
 		unbindService(mPowerMonitorConnection);
 		unbindService(Log.SystemLogConnection);
@@ -672,8 +666,8 @@ public class AcousticAppService extends Service
 
 	public void startRecording()
 	{
-		Log.i("AcousticAppControl", "Started for "+frameSize+" , version no is"+versionNo);	
-		Log.i("AcousticAppMain", "Started for "+frameSize+" , version no is"+versionNo);					
+
+		Log.i("AcousticAppControl", "Started for "+frameSize+" , version no is"+versionNo);					
 
 		notificationManager.cancel(1);	
 		notification = new Notification(R.drawable.notif_icon_green ,"Service Running",System.currentTimeMillis());
@@ -681,7 +675,7 @@ public class AcousticAppService extends Service
 		notification.setLatestEventInfo(context_notif, "AcousticApp", "Acoustic Service Running",contentIntent );
 		notificationManager.notify(1, notification);
 
-		recorderInstance = new Recorder(this, probeWriter, SAMPLERATE, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, frameLength_int, deviceName, versionNo, feature); 
+		recorderInstance = new Recorder(this, SAMPLERATE, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, frameLength_int, deviceName, versionNo, feature); 
 		record_thread =new Thread(recorderInstance); 
 		//recorderInstance.setFileName(new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/test.raw"));
 		//log("Final file name : "+recorderInstance.getFileName().getAbsolutePath()); 
@@ -757,8 +751,6 @@ public class AcousticAppService extends Service
 		}
 		tp2=SystemClock.elapsedRealtime();
 		Log.i("AcousticAppControl","Time end: "+(tp2-tp1));
-		Log.i("AcousticAppMain","Time end: "+(tp2-tp1));
-
 		tp1=tp2;
 
 		recorderInstance.setRecording(false); 
@@ -766,8 +758,6 @@ public class AcousticAppService extends Service
 		mEditor.commit();
 		Log.i(TAG,"Stopped Recording");
 		Log.i("AcousticAppControl", "Stopped Recording");
-		//Log.i("AcousticAppMain", "Stopped Recording");
-		
 		notificationManager.cancel(1);
 		
 		if(mSettings.getBoolean("status", false))

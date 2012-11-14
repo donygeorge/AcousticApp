@@ -34,7 +34,6 @@ import edu.ucla.cens.systemlog.ISystemLog;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.ohmage.probemanager.ProbeBuilder;
 
 public class Recorder implements Runnable 
 {
@@ -48,8 +47,6 @@ public class Recorder implements Runnable
 	private native void audioFeatureExtractionDestroy();
 	//private native void helloLog(String logThis);  
 
-    private OhmageProbeWriter probeWriter;
-	
 	/** Name of this application */
 	public static final String APP_NAME = "AcousticApp";
 	public static final int VOICE_THRESH = 300;
@@ -157,13 +154,12 @@ public class Recorder implements Runnable
 	String now_str;
 
 	//Constructor
-	public Recorder(AcousticAppService ob, OhmageProbeWriter probeWriter_in, int sampleRate_in, int channelConfig_in, int audioFormat_in, int frameLength_inp,
+	public Recorder(AcousticAppService ob, int sampleRate_in, int channelConfig_in, int audioFormat_in, int frameLength_inp,
 			String deviceName_in, String versionNo_in, Feature feature_in) 
 	{
 		super();
 		Log.setAppName(APP_NAME);
 		frequency=sampleRate_in;
-		probeWriter=probeWriter_in;
 		channelConfig=channelConfig_in;
 		audioFormat=audioFormat_in;
 		frameLength = frameLength_inp;
@@ -1146,13 +1142,10 @@ public class Recorder implements Runnable
 					object.put("procComplete", procComplete_inp);
 					object.put("frameSize", frameSize_inp);
 					object.put("feature", featureName);
-					JSONArray list = new JSONArray(arr_inp);
-					object.put("data", list);
+					object.put("data", arr_inp);
 
 					if(CONSTS.COMMIT)
-					{
-						probeWriter.writeData(object);
-					}
+						Log.i(DATA_TAG,""+object.toString());
 					//log(object+"");
 				} 
 				catch (Exception e) 
@@ -1163,7 +1156,6 @@ public class Recorder implements Runnable
 			return object;
 		}
 
-		
 		public JSONObject writePartObject(long timestamp, String currentTime, int part,int count, int frameSize_inp, String featureName, ArrayList arr_inp) 
 		{
 			object = new JSONObject();
@@ -1180,13 +1172,10 @@ public class Recorder implements Runnable
 					object.put("date", currentTime);
 					object.put("frameSize", frameSize_inp);
 					object.put("feature", featureName);
-					JSONArray list = new JSONArray(arr_inp);
-					object.put("data", list);
+					object.put("data", arr_inp);
 
 					if(CONSTS.COMMIT)
-					{
-						probeWriter.writeData(object);
-					}
+						Log.i(DATA_TAG,""+object.toString());
 					//log(object+"");
 				} 
 				catch (Exception e) 
