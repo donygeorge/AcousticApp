@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: F:\\Android\\AcousticAppOhmage\\src\\edu\\ucla\\cens\\systemlog\\ISystemLog.aidl
+ * Original file: /Users/donygeorge/AcousticApp/src/edu/ucla/cens/systemlog/ISystemLog.aidl
  */
 package edu.ucla.cens.systemlog;
 public interface ISystemLog extends android.os.IInterface
@@ -23,13 +23,13 @@ public static edu.ucla.cens.systemlog.ISystemLog asInterface(android.os.IBinder 
 if ((obj==null)) {
 return null;
 }
-android.os.IInterface iin = (android.os.IInterface)obj.queryLocalInterface(DESCRIPTOR);
+android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
 if (((iin!=null)&&(iin instanceof edu.ucla.cens.systemlog.ISystemLog))) {
 return ((edu.ucla.cens.systemlog.ISystemLog)iin);
 }
 return new edu.ucla.cens.systemlog.ISystemLog.Stub.Proxy(obj);
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return this;
 }
@@ -134,7 +134,7 @@ Proxy(android.os.IBinder remote)
 {
 mRemote = remote;
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return mRemote;
 }
@@ -152,7 +152,7 @@ return DESCRIPTOR;
      * @param       appName     Application name 
      * @return                  registration result. True if succeeds.
      */
-public boolean registerLogger(java.lang.String tag, java.lang.String dbTable) throws android.os.RemoteException
+@Override public boolean registerLogger(java.lang.String tag, java.lang.String dbTable) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -177,7 +177,7 @@ return _result;
      * @param       tag         tag to check for registeration status
      * @return                  true if the tag has been registered
      */
-public boolean isRegistered(java.lang.String tag) throws android.os.RemoteException
+@Override public boolean isRegistered(java.lang.String tag) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -202,7 +202,7 @@ return _result;
 	 * @param		tag			tag associated with the log message
 	 * @param		message		log message
 	 */
-public boolean verbose(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
+@Override public boolean verbose(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -228,7 +228,7 @@ return _result;
 	 * @param		tag			tag associated with the log message
 	 * @param		message		log message
 	 */
-public boolean info(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
+@Override public boolean info(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -254,7 +254,7 @@ return _result;
 	 * @param		tag			tag associated with the log message
 	 * @param		message		log message
 	 */
-public boolean debug(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
+@Override public boolean debug(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -280,7 +280,7 @@ return _result;
 	 * @param		tag			tag associated with the log message
 	 * @param		message		log message
 	 */
-public boolean warning(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
+@Override public boolean warning(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -306,7 +306,7 @@ return _result;
 	 * @param		tag			tag associated with the log message
 	 * @param		message		log message
 	 */
-public boolean error(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
+@Override public boolean error(java.lang.String tag, java.lang.String message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();

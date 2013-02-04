@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: F:\\Android\\AcousticAppOhmage\\src\\edu\\ucla\\cens\\systemsens\\IPowerMonitor.aidl
+ * Original file: /Users/donygeorge/AcousticApp/src/edu/ucla/cens/systemsens/IPowerMonitor.aidl
  */
 package edu.ucla.cens.systemsens;
 public interface IPowerMonitor extends android.os.IInterface
@@ -23,13 +23,13 @@ public static edu.ucla.cens.systemsens.IPowerMonitor asInterface(android.os.IBin
 if ((obj==null)) {
 return null;
 }
-android.os.IInterface iin = (android.os.IInterface)obj.queryLocalInterface(DESCRIPTOR);
+android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
 if (((iin!=null)&&(iin instanceof edu.ucla.cens.systemsens.IPowerMonitor))) {
 return ((edu.ucla.cens.systemsens.IPowerMonitor)iin);
 }
 return new edu.ucla.cens.systemsens.IPowerMonitor.Stub.Proxy(obj);
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return this;
 }
@@ -81,7 +81,7 @@ Proxy(android.os.IBinder remote)
 {
 mRemote = remote;
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return mRemote;
 }
@@ -94,7 +94,7 @@ return DESCRIPTOR;
      *
      * @param   app     An implementation of IAdaptiveApplication
      */
-public void register(edu.ucla.cens.systemsens.IAdaptiveApplication app, int horizon) throws android.os.RemoteException
+@Override public void register(edu.ucla.cens.systemsens.IAdaptiveApplication app, int horizon) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -115,7 +115,7 @@ _data.recycle();
      *
      * @param   app     An implementation of IAdaptiveApplication
      */
-public void unregister(edu.ucla.cens.systemsens.IAdaptiveApplication app) throws android.os.RemoteException
+@Override public void unregister(edu.ucla.cens.systemsens.IAdaptiveApplication app) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -135,7 +135,7 @@ _data.recycle();
      * 
      * @param   deadline    deadline in minutes from now
      */
-public void setDeadline(int deadline) throws android.os.RemoteException
+@Override public void setDeadline(int deadline) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();

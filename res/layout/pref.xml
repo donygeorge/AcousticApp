@@ -36,6 +36,20 @@
 			android:layout_width="wrap_content">
 			<TextView android:id="@+id/frame_tv" android:layout_height="wrap_content"
 				android:layout_width="wrap_content" android:text="@string/frame_tv_text"></TextView>
+
+			<TableRow
+			    android:id="@+id/tableRow5a"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" >
+
+			    <CheckBox
+			        android:id="@+id/energy_cb"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:checked="true"
+			        android:text="@string/energy_cb_text" />
+			</TableRow>
+
 			<Spinner android:layout_height="wrap_content" android:id="@+id/frame_spinner"
 				android:layout_width="wrap_content"></Spinner>
 		</TableRow>
@@ -44,14 +58,6 @@
 			<TextView android:text="Features : "
 				android:id="@+id/feature_tv" android:layout_height="wrap_content"
 				android:layout_width="wrap_content"></TextView>
-		</TableRow>
-
-
-		<TableRow android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/tableRow5a">
-			<CheckBox android:id="@+id/energy_cb" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:checked="true"
-				android:text="@string/energy_cb_text"></CheckBox>
 		</TableRow>
 		<TableRow android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/tableRow5b">

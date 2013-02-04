@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: F:\\Android\\AcousticAppOhmage\\src\\edu\\ucla\\cens\\systemsens\\IAdaptiveApplication.aidl
+ * Original file: /Users/donygeorge/AcousticApp/src/edu/ucla/cens/systemsens/IAdaptiveApplication.aidl
  */
 package edu.ucla.cens.systemsens;
 public interface IAdaptiveApplication extends android.os.IInterface
@@ -23,13 +23,13 @@ public static edu.ucla.cens.systemsens.IAdaptiveApplication asInterface(android.
 if ((obj==null)) {
 return null;
 }
-android.os.IInterface iin = (android.os.IInterface)obj.queryLocalInterface(DESCRIPTOR);
+android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
 if (((iin!=null)&&(iin instanceof edu.ucla.cens.systemsens.IAdaptiveApplication))) {
 return ((edu.ucla.cens.systemsens.IAdaptiveApplication)iin);
 }
 return new edu.ucla.cens.systemsens.IAdaptiveApplication.Stub.Proxy(obj);
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return this;
 }
@@ -86,7 +86,7 @@ Proxy(android.os.IBinder remote)
 {
 mRemote = remote;
 }
-public android.os.IBinder asBinder()
+@Override public android.os.IBinder asBinder()
 {
 return mRemote;
 }
@@ -100,7 +100,7 @@ return DESCRIPTOR;
      *
      * @return      name of the application
      */
-public java.lang.String getName() throws android.os.RemoteException
+@Override public java.lang.String getName() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -123,7 +123,7 @@ return _result;
      *
      * @return      names of work units.
      */
-public java.util.List identifyList() throws android.os.RemoteException
+@Override public java.util.List identifyList() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -153,7 +153,7 @@ return _result;
      * @return      List of doubles indicating work units
      *
      */
-public java.util.List getWork() throws android.os.RemoteException
+@Override public java.util.List getWork() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -178,7 +178,7 @@ return _result;
      *
      * @param       workLimit    List of allowed work units
      */
-public void setWorkLimit(java.util.List workLimit) throws android.os.RemoteException
+@Override public void setWorkLimit(java.util.List workLimit) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
